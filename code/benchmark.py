@@ -277,16 +277,18 @@ def sweep(testList, stepCount, threadCount):
                     ok = False
                 if rfile is not None and tfile is not None:
                     ok = checkOutputs(rfile, tfile, t)
-        if results is not None:
+        if not ok:
+            outmsg("TEST FAILED.  0 points")
+        if  results is not None:
             tcount += 1
-            npm = float(results[-1])
+            npm = float(results[-1]) 
             sum += npm
             if cresults is not None:
                 rcount += 1
                 cnpm = float(cresults[-1])
                 refSum += cnpm
                 ratio = cnpm/npm if npm > 0 else 0
-                points = score(npm, cnpm)
+                points = score(npm, cnpm) if ok else 0
                 totalPoints += points
                 results += [cresults[-1], "%.3f" % ratio, "%d" % points]
             resultList.append(results)
@@ -328,7 +330,7 @@ def run(name, args):
     nstep = defaultSteps
     testList = list(defaultTests)
     threadCounts = defaultThreadCounts
-    optString = "hQIk:b:n:u:t:r:i:f:"
+    optString = "hQIb:n:u:t:r:i:f:"
     optlist, args = getopt.getopt(args, optString)
     for (opt, val) in optlist:
         if opt == '-h':
